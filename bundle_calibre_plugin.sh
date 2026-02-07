@@ -55,22 +55,20 @@ rm -r __pycache__
 rm *.pyc
 
 # Set module ID. This needs to be changed if any of the module ZIPs change.
-echo -n "2023-12-19-01" > module_id.txt
+echo -n "2024-02-07-01" > module_id.txt
 
 # Copy LICENSE and README.md so it'll be included in the ZIP.
 cp ../LICENSE LICENSE
 cp ../README.md README.md
 
-shopt -s globstar
 echo "Injecting Python2 compat code ..."
-for file in **/*.py;
+find . -name '*.py' -print0 | while IFS= read -r -d '' file;
 do
-    #echo $file
     # Inject Python2 compat code:
     sed_i '/#@@CALIBRE_COMPAT_CODE@@/ {
         r __calibre_compat_code.py
         d
-    }' $file
+    }' "$file"
 
 done
 
